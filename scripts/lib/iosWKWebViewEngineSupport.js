@@ -68,6 +68,11 @@ function isDirectoryExists(dir) {
  */
 function loadProjectFile() {
   try {
+    return loadProjectFile_cordova_9_and_above();
+  } catch(e) {
+  }
+
+  try {
     return loadProjectFile_cordova_7_and_above();
   } catch(e) {
   }
@@ -95,6 +100,13 @@ function loadProjectFile_cordova_5_and_6() {
   var platformIos = context.requireCordovaModule('cordova-lib/src/plugman/platforms/ios');
   
   return platformIos.parseProjectFile(iosPlatformPath);
+}
+
+function loadProjectFile_cordova_9_and_above() {
+  var iosPlatformApi = require(path.join(iosPlatformPath, '/cordova/Api'));
+  var projectFileApi = require(path.join(iosPlatformPath, '/cordova/lib/projectFile.js'));
+  var locations = (new iosPlatformApi()).locations;
+  return projectFileApi.parse(locations);
 }
 
 function loadProjectFile_cordova_7_and_above() {
